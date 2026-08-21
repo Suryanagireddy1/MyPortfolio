@@ -1,15 +1,41 @@
 import { createServer } from 'node:http';
+import { networkInterfaces } from 'node:os';
 import { readFile } from 'node:fs/promises';
 import { extname, join, normalize } from 'node:path';
+
 const root = process.argv[2] || '.';
-const port = Number(process.argv[3] || 5173);
+const port = Number(process.argv[3] || process.env.PORT || 5173);
 const types = { '.html':'text/html', '.js':'text/javascript', '.css':'text/css', '.svg':'image/svg+xml', '.pdf':'application/pdf' };
+
+function getNetworkUrls() {
+  return Object.values(networkInterfaces())
+    .flat()
+    .filter((iface) => iface && iface.family === 'IPv4' && !iface.internal)
+    .map((iface) => `http://${iface.address}:${port}`);
+}
+
+async function readStaticFile(pathname) {
+  const file = normalize(pathname === '/' ? '/index.html' : pathname).replace(/^\.\.\//,'');
+  const full = join(root, file);
+
+  try {
+    return { full, content: await readFile(full) };
+  } catch (error) {
+    if (root !== '.' || error.code !== 'ENOENT') throw error;
+    const publicFull = join('public', file);
+    return { full: publicFull, content: await readFile(publicFull) };
+  }
+}
+
 createServer(async (req,res)=>{
   try {
     const url = new URL(req.url, 'http://localhost');
-    let file = normalize(url.pathname === '/' ? '/index.html' : url.pathname).replace(/^\.\.\//,'');
-    const full = join(root, file);
+    const { full, content } = await readStaticFile(url.pathname);
     res.writeHead(200, { 'content-type': types[extname(full)] || 'application/octet-stream' });
-    res.end(await readFile(full));
+    res.end(content);
   } catch { res.writeHead(404); res.end('Not found'); }
-}).listen(port, '0.0.0.0', ()=>console.log(`Portfolio dev server running at http://localhost:${port}`));
+}).listen(port, '0.0.0.0', ()=>{
+  console.log(`Portfolio dev server running at http://localhost:${port}`);
+  for (const networkUrl of getNetworkUrls()) console.log(`Network preview available at ${networkUrl}`);
+  console.log('If you are using a cloud IDE, open/forward this port from the Ports or Preview panel.');
+});
