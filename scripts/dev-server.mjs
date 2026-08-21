@@ -14,19 +14,6 @@ function getNetworkUrls() {
     .map((iface) => `http://${iface.address}:${port}`);
 }
 
-async function readStaticFile(pathname) {
-  const file = normalize(pathname === '/' ? '/index.html' : pathname).replace(/^\.\.\//,'');
-  const full = join(root, file);
-
-  try {
-    return { full, content: await readFile(full) };
-  } catch (error) {
-    if (root !== '.' || error.code !== 'ENOENT') throw error;
-    const publicFull = join('public', file);
-    return { full: publicFull, content: await readFile(publicFull) };
-  }
-}
-
 createServer(async (req,res)=>{
   try {
     const url = new URL(req.url, 'http://localhost');

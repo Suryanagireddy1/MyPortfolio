@@ -11,7 +11,7 @@ export const profile = {
   email: 'your.email@example.com',
   github: 'https://github.com/your-github',
   linkedin: 'https://linkedin.com/in/your-linkedin',
-  resume: 'resume.pdf',
+  resume: '/resume.pdf',
 };
 
 export const skillGroups = [
