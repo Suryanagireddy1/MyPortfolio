@@ -8,9 +8,9 @@ export const profile = {
   name: 'Surya',
   tagline: 'Data Science & AI graduate (MSc, 2026) specializing in Machine Learning, NLP, and end-to-end ML pipelines',
   location: 'Based in Visakhapatnam, open to relocating to Hyderabad / Indore',
-  email: 'your.email@example.com',
-  github: 'https://github.com/your-github',
-  linkedin: 'https://linkedin.com/in/your-linkedin',
+  email: 'suryanagireddy7564@gmail.com',
+  github: 'https://suryanagireddy1.github.io/',
+  linkedin: 'https://www.linkedin.com/in/surya-nagireddy-568728245/',
   resume: 'resume.pdf',
 };
 
