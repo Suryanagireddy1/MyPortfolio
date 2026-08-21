@@ -17,10 +17,9 @@ function getNetworkUrls() {
 createServer(async (req,res)=>{
   try {
     const url = new URL(req.url, 'http://localhost');
-    let file = normalize(url.pathname === '/' ? '/index.html' : url.pathname).replace(/^\.\.\//,'');
-    const full = join(root, file);
+    const { full, content } = await readStaticFile(url.pathname);
     res.writeHead(200, { 'content-type': types[extname(full)] || 'application/octet-stream' });
-    res.end(await readFile(full));
+    res.end(content);
   } catch { res.writeHead(404); res.end('Not found'); }
 }).listen(port, '0.0.0.0', ()=>{
   console.log(`Portfolio dev server running at http://localhost:${port}`);
