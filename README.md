@@ -18,6 +18,8 @@ npm run dev
 
 Open the printed local URL to preview the site.
 
+If `http://localhost:5173` shows `ERR_CONNECTION_REFUSED`, the dev server is not reachable from the browser you are using. Keep `npm run dev` running, then open the port-forwarded URL for port `5173` from your editor or cloud workspace Ports/Preview panel. If you are running the project directly on your computer, open a new terminal in this repo and run `npm run dev` again.
+
 ## Build
 
 ```bash
